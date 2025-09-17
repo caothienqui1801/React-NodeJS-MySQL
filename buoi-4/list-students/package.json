@@ -1,0 +1,14 @@
+{
+  "name": "list-students",
+  "version": "1.0.0",
+  "description": "buoi-4",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "CaoThienQui",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
