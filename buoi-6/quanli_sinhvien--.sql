@@ -1,0 +1,1 @@
+SELECT * FROM quanly_sinhvien.sinhvien1;
