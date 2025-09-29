@@ -10,7 +10,6 @@ export default function StudentApp() {
     email: "",
   });
 
-  // Lấy danh sách sinh viên khi load
   useEffect(() => {
     fetchStudents();
   }, []);
@@ -24,19 +23,18 @@ export default function StudentApp() {
     }
   };
 
-  // Cập nhật form
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Submit form thêm sinh viên
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.post("http://localhost:3000/students", form);
       alert("✅ Thêm sinh viên thành công!");
       setForm({ ten: "", tuoi: "", lop: "", email: "" });
-      fetchStudents(); // load lại danh sách
+      fetchStudents();
     } catch (err) {
       console.error("❌ Lỗi khi thêm sinh viên:", err);
     }

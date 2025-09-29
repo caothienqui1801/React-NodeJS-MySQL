@@ -1,11 +1,11 @@
 import express from "express";
 import mysql from "mysql2";
-import cors from "cors";   // ⬅ thêm
+import cors from "cors";
 
 const app = express();
 const port = 3000;
 
-app.use(cors());          // ⬅ cho phép mọi origin gọi API
+app.use(cors());
 app.use(express.json());
 
 
@@ -25,7 +25,7 @@ db.connect((err) => {
     console.log("✅ Kết nối MySQL thành công!");
 });
 
-// GET: lấy danh sách sinh viên
+
 app.get("/students", (req, res) => {
     db.query("SELECT * FROM sinhvien", (err, results) => {
         if (err) {
@@ -35,7 +35,7 @@ app.get("/students", (req, res) => {
     });
 });
 
-// POST: thêm sinh viên mới
+
 app.post("/students", (req, res) => {
     const { ten, tuoi, lop, email } = req.body;
     const sql = "INSERT INTO sinhvien (ten, tuoi, lop, email) VALUES (?, ?, ?, ?)";
