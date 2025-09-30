@@ -9,9 +9,9 @@ export default function StudentApp() {
     lop: "",
     email: "",
   });
-  const [editId, setEditId] = useState(null); // Lưu id đang sửa
+  const [editId, setEditId] = useState(null);
 
-  // Lấy danh sách sinh viên khi load
+
   useEffect(() => {
     fetchStudents();
   }, []);
@@ -25,27 +25,27 @@ export default function StudentApp() {
     }
   };
 
-  // Cập nhật form
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Submit form (thêm hoặc sửa)
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (editId) {
-        // Cập nhật
+
         await axios.put(`http://localhost:3000/students/${editId}`, form);
         alert("✏️ Cập nhật sinh viên thành công!");
         setEditId(null);
       } else {
-        // Thêm mới
+
         await axios.post("http://localhost:3000/students", form);
         alert("✅ Thêm sinh viên thành công!");
       }
       setForm({ ten: "", tuoi: "", lop: "", email: "" });
-      fetchStudents(); // load lại danh sách
+      fetchStudents();
     } catch (err) {
       console.error("❌ Lỗi khi thêm/cập nhật sinh viên:", err);
     }
@@ -63,7 +63,6 @@ export default function StudentApp() {
     }
   };
 
-  // Chọn sinh viên để sửa
   const handleEdit = (sv) => {
     setForm(sv);
     setEditId(sv.id);
