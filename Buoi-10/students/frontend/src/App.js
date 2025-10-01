@@ -64,7 +64,12 @@ export default function StudentApp() {
   };
 
   const handleEdit = (sv) => {
-    setForm(sv);
+    setForm({
+      ten: sv.ten,
+      tuoi: sv.tuoi,
+      lop: sv.lop,
+      email: sv.email,
+    });
     setEditId(sv.id);
   };
 
