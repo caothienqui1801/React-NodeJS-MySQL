@@ -27,7 +27,7 @@ db.connect((err) => {
 
 
 app.get("/students", (req, res) => {
-    db.query("SELECT * FROM sinhvien", (err, results) => {
+    db.query("SELECT * FROM sinhvien1", (err, results) => {
         if (err) {
             return res.status(500).json({ error: "Lỗi khi lấy dữ liệu" });
         }
@@ -38,7 +38,7 @@ app.get("/students", (req, res) => {
 
 app.post("/students", (req, res) => {
     const { ten, tuoi, lop, email } = req.body;
-    const sql = "INSERT INTO sinhvien (ten, tuoi, lop, email) VALUES (?, ?, ?, ?)";
+    const sql = "INSERT INTO sinhvien1 (ten, tuoi, lop, email) VALUES (?, ?, ?, ?)";
     db.query(sql, [ten, tuoi, lop, email], (err, result) => {
         if (err) {
             return res.status(500).json({ error: "Lỗi khi thêm sinh viên" });

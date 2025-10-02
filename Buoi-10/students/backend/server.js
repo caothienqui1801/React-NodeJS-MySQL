@@ -24,7 +24,7 @@ db.connect((err) => {
 });
 
 app.get("/students", (req, res) => {
-    db.query("SELECT * FROM students", (err, result) => {
+    db.query("SELECT * FROM sinhvien1", (err, result) => {
         if (err) return res.status(500).send(err);
         res.send(result);
     });
@@ -33,7 +33,7 @@ app.get("/students", (req, res) => {
 app.post("/students", (req, res) => {
     const { ten, tuoi, lop, email } = req.body;
     db.query(
-        "INSERT INTO students (ten, tuoi, lop, email) VALUES (?, ?, ?, ?)",
+        "INSERT INTO sinhvien1 (ten, tuoi, lop, email) VALUES (?, ?, ?, ?)",
         [ten, tuoi, lop, email],
         (err, result) => {
             if (err) return res.status(500).send(err);
@@ -45,24 +45,32 @@ app.post("/students", (req, res) => {
 app.put("/students/:id", (req, res) => {
     const { id } = req.params;
     const { ten, tuoi, lop, email } = req.body;
-    db.query(
-        "UPDATE students SET ten=?, tuoi=?, lop=?, email=? WHERE id=?",
-        [ten, tuoi, lop, email, id],
-        (err) => {
-            if (err) return res.status(500).send(err);
-            res.send({ message: "Cập nhật thành công" });
+    console.log("👉 Dữ liệu nhận được để update:", { id, ten, tuoi, lop, email });
+
+    const sql = "UPDATE sinhvien1 SET ten=?, tuoi=?, lop=?, email=? WHERE id=?";
+    db.query(sql, [ten, tuoi, lop, email, id], (err, result) => {
+        if (err) {
+            console.error("❌ Lỗi khi cập nhật:", err); // In chi tiết lỗi MySQL
+            return res.status(500).json({ error: err.message });
         }
-    );
+        res.json({ message: "Cập nhật thành công", result });
+    });
 });
 
 app.delete("/students/:id", (req, res) => {
     const { id } = req.params;
-    db.query("DELETE FROM students WHERE id=?", [id], (err) => {
-        if (err) return res.status(500).send(err);
-        res.send({ message: "Xóa thành công" });
+    const studentId = parseInt(id);
+
+    const sql = "DELETE FROM sinhvien1 WHERE id = ?";
+
+    db.query(sql, [studentId], (err, result) => {
+        if (err) {
+            console.error("Lỗi khi xoá:", err);
+            return res.status(500).json({ error: "Lỗi server khi xoá" });
+        }
+        res.json({ message: "Xoá thành công", deletedId: studentId });
     });
 });
-
 app.listen(port, () => {
     console.log(`Server chạy tại http://localhost:${port}`);
 });

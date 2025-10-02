@@ -11,56 +11,55 @@ export default function StudentApp() {
   });
   const [editId, setEditId] = useState(null);
 
+  const fetchStudents = () => {
+    axios.get("http://localhost:3000/students")
+      .then((res) => setStudents(res.data))
+      .catch((err) => console.error("❌ Lỗi khi lấy dữ liệu:", err));
+  };
 
   useEffect(() => {
     fetchStudents();
   }, []);
 
-  const fetchStudents = async () => {
-    try {
-      const res = await axios.get("http://localhost:3000/students");
-      setStudents(res.data);
-    } catch (err) {
-      console.error("❌ Lỗi khi lấy dữ liệu:", err);
-    }
-  };
-
-
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      if (editId) {
+    const dataToSend = {
+      ...form,
+      tuoi: form.tuoi ? Number(form.tuoi) : null
+    };
 
-        await axios.put(`http://localhost:3000/students/${editId}`, form);
-        alert("✏️ Cập nhật sinh viên thành công!");
-        setEditId(null);
-      } else {
-
-        await axios.post("http://localhost:3000/students", form);
-        alert("✅ Thêm sinh viên thành công!");
-      }
-      setForm({ ten: "", tuoi: "", lop: "", email: "" });
-      fetchStudents();
-    } catch (err) {
-      console.error("❌ Lỗi khi thêm/cập nhật sinh viên:", err);
+    if (editId) {
+      axios.put(`http://localhost:3000/students/${editId}`, dataToSend)
+        .then(() => {
+          alert("✏️ Cập nhật sinh viên thành công!");
+          setEditId(null);
+          setForm({ ten: "", tuoi: "", lop: "", email: "" });
+          fetchStudents();
+        })
+        .catch((err) => console.error("❌ Lỗi khi cập nhật:", err));
+    } else {
+      axios.post("http://localhost:3000/students", dataToSend)
+        .then((res) => {
+          alert(res.data.message || "✅ Thêm sinh viên thành công!");
+          setForm({ ten: "", tuoi: "", lop: "", email: "" });
+          fetchStudents();
+        })
+        .catch((err) => console.error("❌ Lỗi khi thêm sinh viên:", err));
     }
   };
 
-  // Xóa sinh viên
-  const handleDelete = async (id) => {
-    if (!window.confirm("Bạn có chắc muốn xóa sinh viên này?")) return;
-    try {
-      await axios.delete(`http://localhost:3000/students/${id}`);
-      alert("🗑️ Xóa sinh viên thành công!");
-      fetchStudents();
-    } catch (err) {
-      console.error("❌ Lỗi khi xóa sinh viên:", err);
-    }
+  const handleDelete = (id) => {
+    axios.delete(`http://localhost:3000/students/${id}`)
+      .then(() => {
+        // Cập nhật state trực tiếp để giao diện phản hồi nhanh hơn
+        setStudents(students.filter(sv => sv.id !== id));
+        alert("🗑️ Xóa sinh viên thành công!");
+      })
+      .catch(err => console.error("❌ Lỗi khi xóa sinh viên:", err));
   };
 
   const handleEdit = (sv) => {
